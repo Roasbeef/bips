@@ -20,27 +20,26 @@ client. The light client mode described in this BIP is meant to supersede BIP
 resources required for full-nodes to service this new light client mode
 compared to BIP 37. The light client mode described in this BIP can be seen as
 a "reversal"[1] of BIP 37: rather than the light clients sending filters to
-full-nodes, full-nodes send filters to light client. Unlike BIP 37 we don't
+full-nodes, full-nodes send filters to light clients. Unlike BIP 37, we don't
 utilize bloom filters. Instead, we utilize a compact filter (more efficient
 than bloom filters) which leverages Golomb-Rice coding for compression.
-Additionally, blocks are downloaded as a whole (from any source), rather
-directly from peers than as fragments with merkle-branches proving their
+Additionally, blocks are downloaded as a whole (from any source), rather than
+directly from peers as fragments with merkle-branches proving their
 authenticity.
 
 == Motivation ==
 
 Light clients in Bitcoin provide applications with a less resource intensive
-mechanism validating the work of the most difficult chain and identifying
-entries in the blockchain's log which are relevant to the said application. In
-order to accomplish the first, light clients download and verify the
-connectivity and work of ''only'' the block headers of the chain. Block headers
-are a constant 80-bytes, resulting gin minimal bandwidth even for very long
-chains. In order to efficiently accomplish the second task (ascertaining
-relevant chain data) light clients require a mechanism to learn of relevant
-data in blocks.
+mechanism of validating the work of the most difficult chain and identifying
+entries in the blockchain's log which are relevant to said application. In order
+to accomplish the first, light clients download and verify the connectivity and
+work of ''only'' the block headers of the chain. Block headers are a constant
+80-bytes, resulting in minimal bandwidth even for very long chains. In order to
+efficiently accomplish the second task (ascertaining relevant chain data) light
+clients require a mechanism to learn of relevant data in blocks.
 
 BIP 37 is currently the most widely used light client execution mode within
-Bitcoin. In BIP 37, rather than fetch and fully validating all blocks in the
+Bitcoin. In BIP 37, rather than fetching and fully validating all blocks in the
 chain, the light client instead verifies all headers and sends bloom filters
 containing relevant data to full-nodes. These full-nodes then service the light
 client by querying data within a block against the loaded bloom filter, if a
@@ -50,7 +49,7 @@ sent and distinctly the transaction itself is sent.
 However, BIP 37 has several downsides. Bloom filtering as widely implemented
 provides virtually ''zero'' privacy to wallets or other applications using this
 mechanism [3][4]. Additionally, applications are forced to carefully manage
-their false positive rates in order to not complete give away their set of
+their false positive rates in order to not completely give away their set of
 interested items. Additionally, Full nodes can nearly undetectably lie by
 omission causing a denial of service which can lead to undesirable failure modes
 in applications whose safety critically relies on responding to certain
@@ -62,18 +61,18 @@ filters, creating a denial-of-service vector.
 
 In order to address the drawbacks of BIP 37 raised above, in this document we
 propose an alternative chain filtering mechanism for light clients. Our
-proposal sports a greater degree of privacy that BIP 37 as filtering is now
+proposal sports a greater degree of privacy than BIP 37 as filtering is now
 done on the client side. Clients download a deterministically generated filter
 for a block, and query it locally. If relevant items are found in the filter,
 then the ''entire'' block will be fetched. The decoupling of filter querying from
 active communication with full-nodes enables light clients to fetch blocks from
-''any'' source. Extremely privacy concious light clients may opt to anonymously
+''any'' source. Extremely privacy conscious light clients may opt to anonymously
 fetch blocks using cryptographic techniques such a Private Information
 Retrieval [5].
 
 In order to reduce the size of the filter, we use a data structure capable of
 probabilistic set membership. We elide the selection of the bloom filter data
-structure in favor utilising Golomb-Rice coding which allows us to generate
+structure in favor of utilising Golomb-Rice coding which allows us to generate
 filters more compact than bloom filters which approach the theoretical minimum
 size for probabilistic data structure.
 
@@ -107,7 +106,7 @@ manner to the existing Bitcoin p2p messages.
 By <code>siphash(k, n)</code> we refer to an invocation of the `SipHash8`
 pseudo-random function with <code>k</code> as the 128-bit key, and <code>n</code>
 as the input to the PRF. We instantiate with the recommended parameters of
-<code>c =2 </code> and <code>d = 4</code> 
+<code>c = 2</code> and <code>d = 4</code> 
 
 We defined the concept of an abstract bit steam instantiated by the function:
 <code>new_bit_stream</code> The <code>bit_stream</code> has two functions that
@@ -127,7 +126,7 @@ instead employ a data structure which is a compressed version of the hashed
 values of the contents of blocks.
 
 In the following sections, borrowing from techniques typically used in image
-and video processing we describe our chosen encoding for the hash finger prints
+and video processing we describe our chosen encoding for the hash fingerprints
 of the items in our set of relevant items. In order to compress the items of
 the set in a lossy manner (creating data-structure capable of probabilistic set
 membership), we utilize Golomb-Rice codes to encode the ''delta'' between
@@ -176,13 +175,13 @@ large size. To do so, we'll now turn to Golomb-Rice Coding.
 
 === Golomb-Rice Coding ===
 
-RLE works well when encoding a data stream that has a high degree of
-redundancy. However, in our case due to the hashing of items within the compact
-filter, we'll be dealing with items that ''uniformly distributed''. We can use
-this fact to leverage a more efficient encoding scheme based on the
-distribution of the length of a run. The [Geometric Distribution](link)
+RLE works well when encoding a data stream that has a high degree of redundancy.
+However, in our case due to the hashing of items within the compact filter,
+we'll be dealing with items that are ''uniformly distributed''. We can use this
+fact to leverage a more efficient encoding scheme based on the distribution of
+the length of a run. The [Geometric Distribution](link)
 recodesents the probabilities of a number of failures before the first success
-in a series of Bernoulli trial (yes/no experiments). If our values are i.i.d
+in a series of Bernoulli trials (yes/no experiments). If our values are i.i.d
 (independent, identically distributed) distributed of the run-length <code>r</code> can be
 recodesented as [6]:
 <pre>
@@ -281,12 +280,12 @@ Given these two parameters, we can now construct our set.
 
 ==== Set Construction ====
 
-Set construction takes three parameters: <code>N</code> <code>P</code> and
+Set construction takes three parameters: <code>N</code>, <code>P</code> and
 <code>L</code>
 * where <code>L</code> is a list of the ''raw'' items we wish to insert into the set
 * the type of <code>L</code> is assumed to be of <code>[]byte</code>
 
-NOTE: that <code>P</code> ''must'' be a power of two as we target the specialized case of
+NOTE: <code>P</code> ''must'' be a power of two as we target the specialized case of
 Golomb coding: Golomb-Rice coding.
 
 <pre>
@@ -387,7 +386,7 @@ gcs_match(key: [32]byte, compressed_set: []byte, target: []byte, fp, N: int) -> 
 
     stream = new_bit_stream(compressed_set)
 
-    // We initialize the initial accumlator to a value of zero.
+    // We initialize the initial accumulator to a value of zero.
     let last_value = 0
 
     // As the values in the set are sorted once the decoded values exceeds the
@@ -434,13 +433,13 @@ gcs_match_any(key: [32]byte, compressed_set: []byte, targets [][]byte,
         items.append(item)
     items.sort()
 
-    // Set up a set of accumlator values that we'll use to zip down the two
+    // Set up a set of accumulator values that we'll use to zip down the two
     // filters.
     let last_set_val, last_target_val = 0, 0 
     last_target_val = items[0]
     let = 1
 
-    // We'll keep runnin until one of the values matches each other. If this
+    // We'll keep running until one of the values matches each other. If this
     // happens, then we have a match!
     while last_set_val != last_target_val:
         // Perform a pattern match to decide which filter we'll need to
@@ -462,7 +461,7 @@ gcs_match_any(key: [32]byte, compressed_set: []byte, targets [][]byte,
                 // set.
                 let decoded_value = golomb_decode(stream, fp)
 
-                // Accumlate the decoded delta value to the current value in
+                // Accumulate the decoded delta value to the current value in
                 // order to retreive the current set item.
                 last_set_val += decoded_value
 
@@ -480,11 +479,11 @@ this new operating mode.
 
 ==== Peer to Peer Service Bit ====
 
-To start, we reserve a currently unutiliez service bit. This is required as
+To start, we reserve a currently unutilized service bit. This is required as
 light clients will need to ''preferentially'' peer to full-nodes that support
 the features outlined in this BIP.
 
-The 4th service bit will now be dedicated to signalling support for the
+The 4th service bit will now be dedicated to signaling support for the
 features described within this BIP: 
 * <code>CFNodeCF = 1 << 4</code>
 
@@ -622,7 +621,7 @@ A full-node that receives a <code>getcftypes</code> message should respond with 
 
 As the filters described in this BIP, ''are not'' consensus critical, meaning
 each filter is validated by full-nodes and committed into blocks my miners, we
-require an alternative (albiet less-binding) method to allow light clients to
+require an alternative (albeit less-binding) method to allow light clients to
 ''identify'' and ''reject'' invalid filters. The purely p2p solution to this
 problem is to: obtain a deterministic hash-chain of ''each'' filter. This hash
 chain or "filter header chain" is similar to the regular Bitcoin headers in
