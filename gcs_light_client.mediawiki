@@ -50,8 +50,8 @@ However, BIP 37 has several downsides. Bloom filtering as widely implemented
 provides virtually ''zero'' privacy to wallets or other applications using this
 mechanism [3][4]. Additionally, applications are forced to carefully manage
 their false positive rates in order to not completely give away their set of
-interested items. Additionally, Full nodes can nearly undetectably lie by
-omission causing a denial of service which can lead to undesirable failure modes
+interested items. Additionally, full-nodes can nearly undetectably lie by
+omission, causing a denial of service which can lead to undesirable failure modes
 in applications whose safety critically relies on responding to certain
 on-chain events. When faithfully servicing BIP 37 light clients, full-nodes may
 incur significant I/O and CPU resource usage due to maliciously crafted bloom
@@ -63,7 +63,7 @@ In order to address the drawbacks of BIP 37 raised above, in this document we
 propose an alternative chain filtering mechanism for light clients. Our
 proposal sports a greater degree of privacy than BIP 37 as filtering is now
 done on the client side. Clients download a deterministically generated filter
-for a block, and query it locally. If relevant items are found in the filter,
+for a block and query it locally. If relevant items are found in the filter
 then the ''entire'' block will be fetched. The decoupling of filter querying from
 active communication with full-nodes enables light clients to fetch blocks from
 ''any'' source. Extremely privacy conscious light clients may opt to anonymously
@@ -91,8 +91,8 @@ them over the network.
 
 == Preliminaries ==
 
-Before we specify the details of our proposal. we'll first go over a few
-preliminaries which will aide in the understanding our proposal.
+Before we specify the details of our proposal, we'll first go over a few
+preliminaries which will aid in the understanding our proposal.
 
 By <code>[]byte</code> we refer to a slice (or array) of bytes. This value is
 typically expressed in C-like languages as an array of uint_8's.
@@ -126,7 +126,7 @@ instead employ a data structure which is a compressed version of the hashed
 values of the contents of blocks.
 
 In the following sections, borrowing from techniques typically used in image
-and video processing we describe our chosen encoding for the hash fingerprints
+and video processing, we describe our chosen encoding for the hash fingerprints
 of the items in our set of relevant items. In order to compress the items of
 the set in a lossy manner (creating data-structure capable of probabilistic set
 membership), we utilize Golomb-Rice codes to encode the ''delta'' between
@@ -322,7 +322,7 @@ values are then sorted.
 
 ==== Set Compression ====
 
-Once the set of hashed items has been constructed (and sorted). We then use
+Once the set of hashed items has been constructed (and sorted) we then use
 Golomb-Rice coding to ''compress'' the set by encoding the ''delta'' value
 between each successive element within the set. As these values are uniformly
 distributed, the deltas between these values will be Geometrically Distributed,
@@ -369,7 +369,7 @@ revealing the true values which can be queried against.
 
 Given a compressed Golomb-Rice coded set, one must first ''decompress'' the set
 itself in order to query items which have been included within the set.
-Decompression of a set, follows the reverse procedure of encoding. To decode an
+Decompression of a set follows the reverse procedure of encoding. To decode an
 element, we'll decode the encoded quotient and remainder of encoded delta.
 With the full delta re-constructed, we then ''add'' this value to the prior
 value in order to reconstruct the full value. Following this procedure we can
@@ -629,11 +629,11 @@ A full-node that receives a <code>getcftypes</code> message should respond with 
 
 ==== Compact Filter Header Chain ====
 
-As the filters described in this BIP, ''are not'' consensus critical, meaning
-each filter is validated by full-nodes and committed into blocks my miners, we
+As the filters described in this BIP ''are not'' consensus critical, meaning
+each filter is validated by full-nodes and committed into blocks by miners, we
 require an alternative (albeit less-binding) method to allow light clients to
 ''identify'' and ''reject'' invalid filters. The purely p2p solution to this
-problem is to: obtain a deterministic hash-chain of ''each'' filter. This hash
+problem is to obtain a deterministic hash-chain of ''each'' filter. This hash
 chain or "filter header chain" is similar to the regular Bitcoin headers in
 that it allows a light client to verify the ''authenticity'' of a received
 filter.
@@ -828,7 +828,7 @@ The <code>BlockHash</code> field is included in both message as this allows
 easily matching requests against responses, as the responses aren't
 self-identifying like block headers are (via own hash).
 
-The parameters <code>N</code> (the number of elements in the filter), and
+The parameters <code>N</code> (the number of elements in the filter) and
 <code>P</code> (<code>1 << false_positive_rate</code>) are required by the light
 client in order to properly incrementally decodes, query, and validate
 (reconstruct from Bitcoin block) a compact filter. The parameter <code>N</code>
