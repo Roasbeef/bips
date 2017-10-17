@@ -48,7 +48,7 @@ sent and distinctly the transaction itself is sent.
 
 However, BIP 37 has several downsides. Bloom filtering as widely implemented
 provides virtually ''zero'' privacy to wallets or other applications using this
-mechanism [3][4]. Additionally, applications are forced to carefully manage
+mechanism [2][3]. Additionally, applications are forced to carefully manage
 their false positive rates in order to not completely give away their set of
 interested items. Additionally, Full nodes can nearly undetectably lie by
 omission causing a denial of service which can lead to undesirable failure modes
@@ -68,7 +68,7 @@ then the ''entire'' block will be fetched. The decoupling of filter querying fro
 active communication with full-nodes enables light clients to fetch blocks from
 ''any'' source. Extremely privacy conscious light clients may opt to anonymously
 fetch blocks using cryptographic techniques such a Private Information
-Retrieval [5].
+Retrieval [4].
 
 In order to reduce the size of the filter, we use a data structure capable of
 probabilistic set membership. We elide the selection of the bloom filter data
@@ -183,7 +183,7 @@ the length of a run. The [Geometric Distribution](link)
 represents the probabilities of a number of failures before the first success
 in a series of Bernoulli trials (yes/no experiments). If our values are i.i.d
 (independent, identically distributed) distributed of the run-length <code>r</code> can be
-represented as [6]:
+represented as [5]:
 <pre>
 P(r = n) = P^n * (1-p)
 </pre>
@@ -326,7 +326,7 @@ Once the set of hashed items has been constructed (and sorted). We then use
 Golomb-Rice coding to ''compress'' the set by encoding the ''delta'' value
 between each successive element within the set. As these values are uniformly
 distributed, the deltas between these values will be Geometrically Distributed,
-meaning that Golomb-Rice coding will be optimal for this use-case [6].
+meaning that Golomb-Rice coding will be optimal for this use-case [5].
 
 The following routine describes the compression process:
 <pre>
@@ -926,7 +926,7 @@ alternatives along with our rationale for not pursuing them.
 
 ==== Cryptographic Accumulators ====
 
-Cryptographic accumulators [7] are a cryptographic data structure that enables
+Cryptographic accumulators [6] are a cryptographic data structure that enables
 a (amongst other operations) a one way membership test. One advantage of
 accumulators are that they are ''constant'' size, independent on the number of
 elements inserted into the accumulator. However, current constructions of
@@ -952,14 +952,12 @@ TODO(alex):
 == References ==
 1. https://github.com/bitcoin/bips/blob/master/bip-0037.mediawiki
 
-2. https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2016-May/012636.html
+2. https://eprint.iacr.org/2014/763.pdf
 
-3. https://eprint.iacr.org/2014/763.pdf
+3. https://jonasnick.github.io/blog/2015/02/12/privacy-in-bitcoinj/
 
-4. https://jonasnick.github.io/blog/2015/02/12/privacy-in-bitcoinj/
+4. https://en.wikipedia.org/wiki/Private_information_retrieval
 
-5. https://en.wikipedia.org/wiki/Private_information_retrieval
+5. http://urchin.earth.li/~twic/Golombs_Original_Paper/
 
-6. http://urchin.earth.li/~twic/Golombs_Original_Paper/
-
-7. https://en.wikipedia.org/wiki/Accumulator_(cryptography)
+6. https://en.wikipedia.org/wiki/Accumulator_(cryptography)
