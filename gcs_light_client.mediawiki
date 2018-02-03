@@ -51,7 +51,7 @@ sent and distinctly the transaction itself is sent.
 However, BIP 37 has several downsides. Bloom filtering as widely implemented
 provides virtually ''zero'' privacy to wallets or other applications using this
 mechanism
-<ref>https://eprint.iacr.org/2014/763.pdf</ref><ref>https://jonasnick.github.io/blog/2015/02/12/privacy-in-bitcoinj/</ref>.
+<ref>https://eprint.iacr.org/2014/763.pdf</ref><ref>https://jonasnick.github.io/blog/2015/02/12/privacy-in-bitcoinj/</ref><ref>https://eprint.iacr.org/2014/763.pdf</ref>.
 Additionally, applications are forced to carefully manage their false positive
 rates in order to not completely give away their set of interested items.
 Additionally, full-nodes can nearly undetectably lie by omission, causing a
