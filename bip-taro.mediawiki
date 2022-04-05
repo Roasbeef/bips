@@ -47,7 +47,7 @@ This document is licensed under the 2-clause BSD license.
 Bitcoin, the first decentralized blockchain, realized early in its life
 several systems that attempted to represent arbitrary assets within the
 constraints of the Bitcoin system itself. Amongst the earliest of these systems
-was Counterparty (now known as OMNI), a meta-token protocol on top of Bitcoin
+was Mastercoin (now known as OMNI), a meta-token protocol on top of Bitcoin
 that used <code>OP_RETURN</code> to commit the raw representations and transfers
 of assets within the system. Several years after the creation and deployment of
 Omni and other related systems very little activity takes place within these
