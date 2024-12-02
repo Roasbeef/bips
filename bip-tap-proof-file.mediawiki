@@ -169,6 +169,7 @@ where:
 ** The <code>meta_type</code> field can be used to indicate how to parse/render the meta data pre-image.
 *** The meta type currently defined are:
 **** <code>0</code>: no true type, just designates an opaque data blob.
+**** <code>1</code>: a generic JSON blob, MUST be valid JSON.
 ** The <code>meta_data</code> is the raw meta data itself.
 *** If the contained asset is a genesis asset (has a valid genesis witness), then a verifier SHOULD verify that: `sha256(tlv_encode(meta_reveal)) == asset_meta_hash`.
 *** This field MUST only be present for genesis asset proofs.
