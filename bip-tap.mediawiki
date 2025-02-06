@@ -558,7 +558,6 @@ where:
 
 (TODO(roasbeef): merkle sum commitment over input set as well? enables probabilistic validation?)
 
-
 An asset leaf serves to store structured data related to an asset, as well as
 the series of previous input asset witnesses needed to verify the proper
 transfer of an asset leaf. The input structure here resembles the normal
@@ -590,6 +589,18 @@ easily verify that no new assets are created when inputs are referenced, and
 also that each new split/merge results in a valid split set (via the
 <code>split_commitment_root</code> which is included in the computed witness
 sighash). 
+
+======Defined Asset Versions======
+
+Today two asset versions are defined, these versions govern the way the asset
+leaf TLV is serialized within proofs files, and also the serialization used for
+the leaf commitment in the MS-SMT tree.
+
+Defined <code>taproot_asset_version</code>s:
+
+* '''v0 (0)''': The base asset version. This version was the first version utilized, and confers so special behavior to serializations or semantics.
+
+*'''v1 (1)''': The second asset version (v1), also known as the "segwit" asset version. For this asset version, when serializing the asset TLV within the leaf of an MS-SMT tree (for holding assets), the <code>asset_witness</code> field MUST always be omitted. This enables protocol that nest layers of unsigned transactions, like payment channels.
 
 ===Asset Creation===
 
